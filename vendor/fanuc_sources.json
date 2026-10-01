@@ -1,0 +1,38 @@
+{
+  "repositories": {
+    "fanuc_driver": {
+      "url": "https://github.com/FANUC-CORPORATION/fanuc_driver",
+      "commit": "8f9f22e50f02042ded000440e305c7f6c820d5a2"
+    },
+    "fanuc_description": {
+      "url": "https://github.com/FANUC-CORPORATION/fanuc_description",
+      "commit": "fb40c9803a826ba68c7c8e28ba904a25efa7fcd2"
+    }
+  },
+  "dependencies": {
+    "sockpp": {
+      "commit": "afdeacba9448c7a77194eed6ab8e1c0b1653c79a",
+      "url": "https://github.com/fpagliughi/sockpp.git"
+    },
+    "readerwriterqueue": {
+      "commit": "211616e0554f93152ab3108b8d93fbc23174a9d9",
+      "url": "https://github.com/cameron314/readerwriterqueue.git"
+    },
+    "reflect-cpp": {
+      "commit": "2a0fdeabe35bdab0e07e05d4f869ca88bd6d2b8c",
+      "url": "https://github.com/getml/reflect-cpp.git"
+    },
+    "yaml-cpp": {
+      "commit": "2f86d13775d119edbb69af52e5f566fd65c6953b",
+      "url": "https://github.com/jbeder/yaml-cpp.git"
+    }
+  },
+  "subset": "Required FANUC controller, hardware, library and message packages; CRX-10iA description and meshes. Git histories, unrelated model assets, example packages and vcpkg checkout omitted. Package tests and licenses retained.",
+  "patches": [
+    "ros/fanuc_humble_realtime_buffer.patch",
+    "fanuc_libs/dependencies/sockpp.patch",
+    "fanuc_libs/dependencies/readerwriterqueue.patch",
+    "fanuc_libs/dependencies/reflectcpp.patch"
+  ],
+  "offline_build": "FANUC supplied dependency patches are applied to bundled dependencies. Setup supplies CMake FETCHCONTENT_SOURCE_DIR overrides so no Git fetch is needed."
+}

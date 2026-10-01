@@ -1,0 +1,117 @@
+{
+  "id": "fanuc",
+  "name": "FANUC CRX-10iA",
+  "manufacturer": "FANUC",
+  "model": "CRX-10iA",
+  "description": "Six-axis collaborative arm \u00b7 official FANUC ROS 2 stack",
+  "accent": "#ffd34e",
+  "dof": 6,
+  "mode": "mock_hardware",
+  "urdf_url": "/assets/fanuc/robot.urdf",
+  "tool_link": "end_effector",
+  "source_url": "https://github.com/FANUC-CORPORATION/fanuc_driver",
+  "joint_names": [
+    "J1",
+    "J2",
+    "J3",
+    "J4",
+    "J5",
+    "J6"
+  ],
+  "limits": [
+    {
+      "lower": -3.3161255787892263,
+      "upper": 3.3161255787892263,
+      "velocity": 2.0943951023931953
+    },
+    {
+      "lower": -3.139847324337799,
+      "upper": 3.139847324337799,
+      "velocity": 2.0943951023931953
+    },
+    {
+      "lower": -1.239183768915974,
+      "upper": 4.380776422505767,
+      "velocity": 3.141592653589793
+    },
+    {
+      "lower": -3.3161255787892263,
+      "upper": 3.3161255787892263,
+      "velocity": 3.141592653589793
+    },
+    {
+      "lower": -3.139847324337799,
+      "upper": 3.139847324337799,
+      "velocity": 3.141592653589793
+    },
+    {
+      "lower": -3.9269908169872414,
+      "upper": 3.9269908169872414,
+      "velocity": 3.141592653589793
+    }
+  ],
+  "poses": [
+    {
+      "id": "ready",
+      "label": "Ready"
+    },
+    {
+      "id": "inspect",
+      "label": "Inspect"
+    },
+    {
+      "id": "park",
+      "label": "Park"
+    }
+  ],
+  "pose_positions": {
+    "ready": [
+      0.0,
+      -0.45,
+      0.55,
+      0.0,
+      0.7,
+      0.0
+    ],
+    "inspect": [
+      0.65,
+      0.05,
+      0.8,
+      0.5,
+      0.8,
+      -0.4
+    ],
+    "park": [
+      -0.35,
+      -0.35,
+      1.1,
+      0.0,
+      0.9,
+      0.0
+    ]
+  },
+  "initial_positions": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "demo_sequence": [
+    "inspect",
+    "park",
+    "ready"
+  ],
+  "capabilities": [
+    "move_named",
+    "move_joints",
+    "run_demo",
+    "stop"
+  ],
+  "adapter": {
+    "name": "FANUC ROS 2 adapter",
+    "action": "/fanuc/joint_trajectory_controller/follow_joint_trajectory",
+    "joint_states": "/fanuc/joint_states"
+  }
+}

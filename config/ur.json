@@ -1,0 +1,40 @@
+{
+  "id": "ur",
+  "name": "UR5e",
+  "manufacturer": "Universal Robots",
+  "model": "UR5e",
+  "description": "Official UR ROS 2 stack with ros2_control mock hardware",
+  "accent": "#71c9f4",
+  "dof": 6,
+  "mode": "mock_hardware",
+  "urdf_url": "/assets/ur/robot.urdf",
+  "tool_link": "tool0",
+  "source_url": "https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver",
+  "joint_names": ["shoulder_pan_joint", "shoulder_lift_joint", "elbow_joint", "wrist_1_joint", "wrist_2_joint", "wrist_3_joint"],
+  "limits": [
+    {"lower": -6.283185307179586, "upper": 6.283185307179586, "velocity": 3.141592653589793},
+    {"lower": -6.283185307179586, "upper": 6.283185307179586, "velocity": 3.141592653589793},
+    {"lower": -3.141592653589793, "upper": 3.141592653589793, "velocity": 3.141592653589793},
+    {"lower": -6.283185307179586, "upper": 6.283185307179586, "velocity": 3.141592653589793},
+    {"lower": -6.283185307179586, "upper": 6.283185307179586, "velocity": 3.141592653589793},
+    {"lower": -6.283185307179586, "upper": 6.283185307179586, "velocity": 3.141592653589793}
+  ],
+  "poses": [
+    {"id": "ready", "label": "Ready"},
+    {"id": "inspect", "label": "Inspect"},
+    {"id": "park", "label": "Park"}
+  ],
+  "pose_positions": {
+    "ready": [0.0, -1.2, 1.6, -1.9, -1.57, 0.0],
+    "inspect": [0.65, -0.85, 1.1, -1.8, -1.2, 0.4],
+    "park": [-0.75, -1.45, 1.9, -2.0, -1.57, -0.5]
+  },
+  "demo_sequence": ["inspect", "park", "ready"],
+  "initial_positions": [0.0, -1.2, 1.6, -1.9, -1.57, 0.0],
+  "capabilities": ["move_named", "move_joints", "run_demo", "stop"],
+  "adapter": {
+    "name": "UR ROS 2 trajectory adapter",
+    "action": "/ur/joint_trajectory_controller/follow_joint_trajectory",
+    "joint_states": "/ur/joint_states"
+  }
+}

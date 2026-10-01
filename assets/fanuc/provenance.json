@@ -1,0 +1,17 @@
+{
+  "model": "FANUC CRX-10iA",
+  "license": "Apache-2.0",
+  "repositories": {
+    "fanuc_driver": {
+      "url": "https://github.com/FANUC-CORPORATION/fanuc_driver",
+      "commit": "8f9f22e50f02042ded000440e305c7f6c820d5a2"
+    },
+    "fanuc_description": {
+      "url": "https://github.com/FANUC-CORPORATION/fanuc_description",
+      "commit": "fb40c9803a826ba68c7c8e28ba904a25efa7fcd2"
+    }
+  },
+  "modifications": "Expanded official Xacro; replaced package mesh paths with web asset paths. Geometry and meshes unchanged.",
+  "driver_compatibility_patch": "ros/fanuc_humble_realtime_buffer.patch adapts two upstream controller flags to Humble joint_trajectory_controller 2.45 RealtimeBuffer accessors. The FANUC scaled controller still executes trajectories.",
+  "simulation": "FANUC ScaledJointTrajectoryController with the official Xacro's mock_components/GenericSystem; no physical controller or ROBOGUIDE validation."
+}

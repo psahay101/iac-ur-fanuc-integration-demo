@@ -1,0 +1,33 @@
+{
+  "mode": "mock_hardware",
+  "robots": {
+    "fanuc": {
+      "samples": 38,
+      "intermediate_motion": true,
+      "final_error_rad": 0.0,
+      "action": "/fanuc/joint_trajectory_controller/follow_joint_trajectory",
+      "cancel_hold_drift_rad": 0.0
+    },
+    "ur": {
+      "samples": 38,
+      "intermediate_motion": true,
+      "final_error_rad": 0.0,
+      "action": "/ur/joint_trajectory_controller/follow_joint_trajectory",
+      "cancel_hold_drift_rad": 0.0
+    }
+  },
+  "checks": [
+    "live WebSocket snapshots",
+    "same move_named API for both OEMs",
+    "intermediate joint feedback and final positions",
+    "duplicate request idempotency",
+    "busy rejection",
+    "same three-waypoint run_demo API for both OEMs",
+    "confirmed action cancellation and held joint feedback",
+    "out-of-limits commands rejected",
+    "official URDFs served",
+    "real controller deactivation blocks motion while cancel remains callable; reactivation restores readiness",
+    "joint feedback loss during motion fails the mission and cancels the action; held position verified after feedback returns"
+  ],
+  "timestamp": "2026-10-01T21:50:02.775+00:00"
+}

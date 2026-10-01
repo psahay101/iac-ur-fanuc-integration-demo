@@ -1,0 +1,4 @@
+# Keep third-party sources and generated assets out of project language statistics.
+vendor/** linguist-vendored
+assets/** linguist-generated
+frontend/screenshots/** binary

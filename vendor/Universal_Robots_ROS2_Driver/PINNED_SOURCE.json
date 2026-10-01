@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver",
+  "branch": "humble",
+  "commit": "81b7b9c2adf884212173c70f1f962ac6e507b041",
+  "version": "2.7.0",
+  "license": "BSD-3-Clause",
+  "export": "Full source tree exported with git archive; git metadata omitted.",
+  "modifications": "None. Project launch wiring lives outside the upstream source tree."
+}

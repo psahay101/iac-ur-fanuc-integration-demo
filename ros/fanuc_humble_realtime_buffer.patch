@@ -1,0 +1,106 @@
+--- a/fanuc_controllers/src/scaled_joint_trajectory_controller.cpp
++++ b/fanuc_controllers/src/scaled_joint_trajectory_controller.cpp
+@@ -2,6 +2,7 @@
+ // SPDX-FileCopyrightText: 2025-2026, FANUC CORPORATION
+ //
+ // SPDX-License-Identifier: Apache-2.0
++// IAC demo: adapt flag access to Humble joint_trajectory_controller 2.45 RealtimeBuffer API.
+ 
+ #include "fanuc_controllers/scaled_joint_trajectory_controller.hpp"
+ 
+@@ -58,7 +59,7 @@
+       result->set__error_string("Aborted: STMO is inactive (!motion_possible)");
+       active_goal->setAborted(result);
+       rt_active_goal_.writeFromNonRT(RealtimeGoalHandlePtr());
+-      rt_has_pending_goal_ = false;
++      rt_has_pending_goal_.writeFromNonRT(false);
+       RCLCPP_WARN(this->get_node()->get_logger(), "Aborted: STMO is inactive (!motion_possible)");
+       traj_msg_external_point_ptr_.reset();
+       traj_msg_external_point_ptr_.initRT(set_hold_position());
+@@ -83,7 +84,7 @@
+     // The controller should update its reference to use the current state
+     read_state_from_state_interfaces(state_current_);
+     rt_active_goal_.writeFromNonRT(RealtimeGoalHandlePtr());
+-    rt_has_pending_goal_ = false;
++    rt_has_pending_goal_.writeFromNonRT(false);
+     traj_msg_external_point_ptr_.reset();
+     traj_msg_external_point_ptr_.initRT(set_hold_position());
+     // command_joint_names_
+@@ -137,7 +138,7 @@
+   auto current_external_msg = traj_external_point_ptr_->get_trajectory_msg();
+   auto new_external_msg = traj_msg_external_point_ptr_.readFromRT();
+   // Discard, if a goal is pending but still not active (somewhere stuck in goal_handle_timer_)
+-  if (current_external_msg != *new_external_msg && (rt_has_pending_goal_ && !active_goal) == false)
++  if (current_external_msg != *new_external_msg && (*rt_has_pending_goal_.readFromRT() && !active_goal) == false)
+   {
+     fill_partial_goal(*new_external_msg);
+     sort_to_local_joint_order(*new_external_msg);
+@@ -207,7 +208,7 @@
+ 
+       // have we reached the end, are not holding position, and is a timeout configured?
+       // Check independently of other tolerances
+-      if (!before_last_point && !rt_is_holding_ && cmd_timeout_ > 0.0 && time_difference > cmd_timeout_)
++      if (!before_last_point && !(*rt_is_holding_.readFromRT()) && cmd_timeout_ > 0.0 && time_difference > cmd_timeout_)
+       {
+         RCLCPP_WARN(logger, "Aborted due to command timeout");
+ 
+@@ -223,14 +224,14 @@
+         // Always check the state tolerance on the first sample in case the first sample
+         // is the last point
+         // print output per default, goal will be aborted afterwards
+-        if ((before_last_point || first_sample) && !rt_is_holding_ &&
++        if ((before_last_point || first_sample) && !(*rt_is_holding_.readFromRT()) &&
+             !check_state_tolerance_per_joint(state_error_, index, active_tol->state_tolerance[index],
+                                              true /* show_errors */))
+         {
+           tolerance_violated_while_moving = true;
+         }
+         // past the final point, check that we end up inside goal tolerance
+-        if (!before_last_point && !rt_is_holding_ &&
++        if (!before_last_point && !(*rt_is_holding_.readFromRT()) &&
+             !check_state_tolerance_per_joint(state_error_, index, active_tol->goal_state_tolerance[index],
+                                              false /* show_errors */))
+         {
+@@ -315,7 +316,7 @@
+           // TODO(matthew-reynolds): Need a lock-free write here
+           // See https://github.com/ros-controls/ros2_controllers/issues/168
+           rt_active_goal_.writeFromNonRT(RealtimeGoalHandlePtr());
+-          rt_has_pending_goal_ = false;
++          rt_has_pending_goal_.writeFromNonRT(false);
+           RCLCPP_WARN(logger, "Aborted due to state tolerance violation");
+           traj_msg_external_point_ptr_.reset();
+           traj_msg_external_point_ptr_.initRT(set_hold_position());
+@@ -332,7 +333,7 @@
+             // TODO(matthew-reynolds): Need a lock-free write here
+             // See https://github.com/ros-controls/ros2_controllers/issues/168
+             rt_active_goal_.writeFromNonRT(RealtimeGoalHandlePtr());
+-            rt_has_pending_goal_ = false;
++            rt_has_pending_goal_.writeFromNonRT(false);
+             RCLCPP_INFO(logger, "Goal reached, success!");
+             traj_msg_external_point_ptr_.reset();
+             traj_msg_external_point_ptr_.initRT(set_success_trajectory_point());
+@@ -348,21 +349,21 @@
+             // TODO(matthew-reynolds): Need a lock-free write here
+             // See https://github.com/ros-controls/ros2_controllers/issues/168
+             rt_active_goal_.writeFromNonRT(RealtimeGoalHandlePtr());
+-            rt_has_pending_goal_ = false;
++            rt_has_pending_goal_.writeFromNonRT(false);
+             RCLCPP_WARN(logger, "%s", error_string.c_str());
+             traj_msg_external_point_ptr_.reset();
+             traj_msg_external_point_ptr_.initRT(set_hold_position());
+           }
+         }
+       }
+-      else if (tolerance_violated_while_moving && !rt_has_pending_goal_)
++      else if (tolerance_violated_while_moving && !(*rt_has_pending_goal_.readFromRT()))
+       {
+         // we need to ensure that there is no pending goal -> we get a race condition otherwise
+         RCLCPP_ERROR(logger, "Holding position due to state tolerance violation");
+         traj_msg_external_point_ptr_.reset();
+         traj_msg_external_point_ptr_.initRT(set_hold_position());
+       }
+-      else if (!before_last_point && !within_goal_time && !rt_has_pending_goal_)
++      else if (!before_last_point && !within_goal_time && !(*rt_has_pending_goal_.readFromRT()))
+       {
+         RCLCPP_ERROR(logger, "Exceeded goal_time_tolerance: holding position...");
+         traj_msg_external_point_ptr_.reset();
